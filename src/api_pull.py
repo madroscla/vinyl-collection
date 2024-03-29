@@ -3,6 +3,7 @@
 import discogs_client
 
 from . import config
+from . import discogs_scrape
 
 # Connecting to the API and setting it to my collection
 d = discogs_client.Client(config.client_name, user_token=config.api_token)
@@ -59,11 +60,13 @@ def add_records():
     """Pulls data from API and outputs a list of lists.
 
        See python3-discogs-client documentation for 
-       further details on release data.
+       further details on release data. Also includes webscraped
+       price data from discogs_scrape
     """
     collection = []
     for i in me.collection_folders[0].releases:
         item = d.release(i.id)
+        prices = discogs_scrape.get_prices(item.url)
         collection.append({
             'id': item.id,
             'title': item.title,
@@ -80,6 +83,9 @@ def add_records():
             'wants': item.community.want,
             'haves': item.community.have,
             'rating': float(str(item.community.rating)[13:16]),
+            'lowest_sold_usd': prices['low'],
+            'median_sold_usd': prices['median'],
+            'highest_sold_usd': prices['high'],
             'url': item.url
     })
     return collection
