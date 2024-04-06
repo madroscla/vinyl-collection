@@ -11,7 +11,7 @@ color_mapping = {
     'Green': ['green', 'emerald', 'glow in the dark'],
     'Yellow': ['yellow', 'gold'],
     'Pink': ['pink'],
-    'Red': ['red'],
+    'Red': ['red', 'maroon'],
     'Orange': ['orange', 'tangerine'],
     'White': ['white', 'cream'],
     'Brown': ['brown', 'chestnut'],
@@ -72,15 +72,18 @@ def find_size(series):
     """
     l_12inch = ['LP','12\"']
     l_7inch = ['7\"']
+    l_shape = ['Shape']
 
     flag_12 = series.apply(lambda desc: any(item in l_12inch for item in desc))
     flag_7 = series.apply(lambda desc: any(item in l_7inch for item in desc))
-    flag_other = np.where((flag_12 == False) & (flag_7 == False), True, False)
+    flag_shape = series.apply(lambda desc: any(item in l_shape for item in desc))
+    flag_other = np.where((flag_12 == False) & (flag_7 == False) & (flag_shape == False), True, False)
 
     conditions = [(flag_12 == True),
-              (flag_7 == True),
-              (flag_other == True)]
-    sizes = ['12\"', '7\"', 'Other Size']
+                  (flag_7 == True),
+                  (flag_shape == True),
+                  (flag_other == True)]
+    sizes = ['12\"', '7\"', 'Shape', 'Other Size']
     calcs = np.select(conditions, sizes)
     return calcs
 
