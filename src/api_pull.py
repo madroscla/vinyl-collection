@@ -33,7 +33,7 @@ def get_artist_info(item, field):
     match field:
         case 'name':
             for i in item.artists:
-                artists.append(i.name)
+                artists.append(i.name.title())
         case 'id':
             for i in item.artists:
                 artists.append(i.id)

@@ -12,7 +12,7 @@ color_mapping = {
     'Yellow': ['yellow', 'gold'],
     'Pink': ['pink'],
     'Red': ['red', 'maroon'],
-    'Orange': ['orange', 'tangerine'],
+    'Orange': ['orange', 'tangerine', 'amber'],
     'White': ['white', 'cream'],
     'Brown': ['brown', 'chestnut'],
     'Clear': ['clear'],
@@ -45,25 +45,24 @@ def check_picture_disc(row):
     else:
         return row['pressing']
 
-def map_color(series):
+def map_colors(row):
     '''Takes pressing information, maps to 'color_mapping' dictionary.
 
        Sometimes pressings have more than one color (e.g. 'Green and Blue Swirl')
        so this function returns 'Multicolor' if more than one dictionary key applies.
     '''
-    def assign_new_color(color):
-        matched_colors = []
+    mapped_colors = []
+    for color in row['color']:
         for key, values in color_mapping.items():
             if any(val.lower() in color.lower() for val in values):
-                matched_colors.append(key)
-        if len(matched_colors) == 1:
-            return matched_colors[0]
-        elif len(matched_colors) > 1:
+                mapped_colors.append(key)
+                
+        if len(mapped_colors) == 1:
+            return mapped_colors[0]
+        elif len(mapped_colors) > 1:
             return 'Multicolor'
         else:
             return 'Black'
-    series = series.apply(assign_new_color)
-    return series
 
 def find_size(series):
     """Determines size of vinyl (12", 7", or other size) 
